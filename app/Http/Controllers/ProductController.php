@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Eloquent\ProductRepository;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -11,8 +12,10 @@ class ProductController extends Controller
         return view('products');
     }
 
-    public function create(Request $request)
+    public function create(Request $request, ProductRepository $productRepository)
     {
-        return $request->all();
+        $productRepository->create($request->all());
+
+        return redirect('/')->with('success', true);
     }
 }

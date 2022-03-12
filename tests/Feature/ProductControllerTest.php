@@ -34,4 +34,15 @@ class ProductControllerTest extends TestCase
 
         $response->assertStatus(419);
     }
+
+    public function test_create_endpoint_inserts_data_in_database()
+    {
+        $fakeData = $this->makeFakeProductData();
+        $response = $this->put('/product', $fakeData);
+
+        $response->assertRedirect('/');
+        $this->assertDatabaseHas('products', [
+            'ean_13' => $fakeData['ean_13'],
+        ]);
+    }
 }

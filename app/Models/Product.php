@@ -10,6 +10,14 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'ean_13',
+        'name',
+        'quantity',
+        'initial_cost',
+        'price_with_tax'
+    ];
+
     /**
      * Create a new factory instance for the model.
      *
