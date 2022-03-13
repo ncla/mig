@@ -11,9 +11,19 @@ class ProductControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function makeFakeProductData() {
+    private function makeFakeProductData()
+    {
         $factory = Product::factory();
         return $factory->make()->attributesToArray();
+    }
+
+    private function createProductsWithPredefinedPriceOrder()
+    {
+        $priceOrder = [900, 850, 800, 750, 400, 322, 300, 250, 222, 1000];
+
+        return Product::factory(10)
+            ->sequence(fn ($sequence) => ['price_with_tax' => $priceOrder[$sequence->index]])
+            ->create();
     }
 
     public function test_create_endpoint_returns_unauthorized_response_code_when_csrf_is_missing()
@@ -33,7 +43,7 @@ class ProductControllerTest extends TestCase
             $mock
         );
 
-        $response = $this->put('/product', $this->makeFakeProductData());
+        $response = $this->put('/create-product', $this->makeFakeProductData());
 
         $response->assertStatus(419);
     }
@@ -41,7 +51,7 @@ class ProductControllerTest extends TestCase
     public function test_create_endpoint_inserts_data_in_database()
     {
         $fakeData = $this->makeFakeProductData();
-        $response = $this->put('/product', $fakeData);
+        $response = $this->put('/create-product', $fakeData);
 
         $response->assertRedirect('/');
         $this->assertDatabaseHas('products', [
@@ -51,11 +61,7 @@ class ProductControllerTest extends TestCase
 
     public function test_products_are_sorted_by_price_in_order()
     {
-        $priceOrder = [900, 850, 800, 750, 400, 322, 300, 250, 222, 1000];
-
-        Product::factory(10)
-            ->sequence(fn ($sequence) => ['price_with_tax' => $priceOrder[$sequence->index]])
-            ->create();
+        $this->createProductsWithPredefinedPriceOrder();
 
         $this->get('/?sortPrice=desc')
             ->assertSeeInOrder(
@@ -72,11 +78,7 @@ class ProductControllerTest extends TestCase
 
     public function test_products_are_listed_without_sorting_by_price_when_price_sort_value_is_invalid()
     {
-        $priceOrder = [900, 850, 800, 750, 400, 322, 300, 250, 222, 1000];
-
-        Product::factory(10)
-            ->sequence(fn ($sequence) => ['price_with_tax' => $priceOrder[$sequence->index]])
-            ->create();
+        $this->createProductsWithPredefinedPriceOrder();
 
         $this->get('/?sortPrice=invalidvalue')
             ->assertStatus(200)

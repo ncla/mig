@@ -8,7 +8,12 @@ use Illuminate\Support\Collection;
 
 class ProductRepository
 {
-    public function get($limit = 10, null | string $priceSort = null): Collection
+    /**
+     * @param $limit int Record amount to return
+     * @param string|null $priceSort "asc" or "desc" order values, null for no ordering
+     * @return Collection
+     */
+    public function get(int $limit = 10, null | string $priceSort = null): Collection
     {
         $query = Product::limit($limit);
 
@@ -19,6 +24,10 @@ class ProductRepository
         return $query->get();
     }
 
+    /**
+     * @param array $data
+     * @return EloquentModel|Product
+     */
     public function create(array $data): EloquentModel | Product
     {
         return Product::create($data);

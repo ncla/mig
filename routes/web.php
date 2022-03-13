@@ -15,4 +15,4 @@ use App\Http\Controllers\ProductController;
 */
 
 Route::get('/', [ProductController::class, 'index'])->name('product.index');
-Route::put('/product', [ProductController::class, 'create'])->name('product.create');
+Route::put('/create-product', [ProductController::class, 'create'])->name('product.create');
