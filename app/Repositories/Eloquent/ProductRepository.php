@@ -4,16 +4,16 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 
 class ProductRepository
 {
     /**
      * @param $limit int Record amount to return
      * @param string|null $priceSort "asc" or "desc" order values, null for no ordering
-     * @return Collection
+     * @return LazyCollection
      */
-    public function get(int $limit = 10, null | string $priceSort = null): Collection
+    public function get(int $limit = 10, null | string $priceSort = null): LazyCollection
     {
         $query = Product::limit($limit);
 
@@ -21,7 +21,7 @@ class ProductRepository
             $query = $query->orderBy('price_with_tax', $priceSort);
         }
 
-        return $query->get();
+        return $query->cursor();
     }
 
     /**
