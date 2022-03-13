@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function __construct(protected ProductRepository $productRepository) {}
+
+    public function index(Request $request)
     {
-        return view('products');
+        return view('products', [
+            'products' => $this->productRepository->get(priceSort: 'desc')
+        ]);
     }
 
-    public function create(Request $request, ProductRepository $productRepository)
+    public function create(Request $request)
     {
-        $productRepository->create($request->all());
+        $this->productRepository->create($request->all());
 
         return redirect('/')->with('success', true);
     }

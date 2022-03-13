@@ -37,5 +37,26 @@
 
             <button type="submit">Save</button>
         </form>
+
+        @if(count($products) > 0)
+        <table>
+            <tr>
+                <th>EAN 13</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Initial Cost</th>
+                <th>Price with tax</th>
+            </tr>
+            @foreach($products as $product)
+            <tr>
+                <td>{{ $product->ean_13 }}</td>
+                <td>{{ $product->name }}</td>
+                <td>{{ $product->quantity }}</td>
+                <td>{{ $product->initial_cost }}</td>
+                <td>{{ $product->price_with_tax }}</td>
+            </tr>
+            @endforeach
+        </table>
+        @endif
     </body>
 </html>
