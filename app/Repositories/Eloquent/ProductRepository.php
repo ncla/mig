@@ -8,11 +8,15 @@ use Illuminate\Support\Collection;
 
 class ProductRepository
 {
-    public function get($limit = 10, $priceSort = null | 'desc' | 'asc'): Collection
+    public function get($limit = 10, null | string $priceSort = null): Collection
     {
-        return Product::limit($limit)
-            ->orderBy('price_with_tax', $priceSort)
-            ->get();
+        $query = Product::limit($limit);
+
+        if ($priceSort !== null) {
+            $query = $query->orderBy('price_with_tax', $priceSort);
+        }
+
+        return $query->get();
     }
 
     public function create(array $data): EloquentModel | Product

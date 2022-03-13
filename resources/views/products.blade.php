@@ -53,7 +53,7 @@
                 <td>{{ $product->name }}</td>
                 <td>{{ $product->quantity }}</td>
                 <td>{{ $product->initial_cost }}</td>
-                <td>{{ $product->price_with_tax }}</td>
+                <td class="price">{{ $product->price_with_tax }}</td>
             </tr>
             @endforeach
         </table>

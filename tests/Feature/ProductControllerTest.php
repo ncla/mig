@@ -5,9 +5,12 @@ namespace Tests\Feature;
 use App\Models\Product;
 use Tests\TestCase;
 use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     private function makeFakeProductData() {
         $factory = Product::factory();
         return $factory->make()->attributesToArray();
@@ -44,5 +47,42 @@ class ProductControllerTest extends TestCase
         $this->assertDatabaseHas('products', [
             'ean_13' => $fakeData['ean_13'],
         ]);
+    }
+
+    public function test_products_are_sorted_by_price_in_order()
+    {
+        $priceOrder = [900, 850, 800, 750, 400, 322, 300, 250, 222, 1000];
+
+        Product::factory(10)
+            ->sequence(fn ($sequence) => ['price_with_tax' => $priceOrder[$sequence->index]])
+            ->create();
+
+        $this->get('/?sortPrice=desc')
+            ->assertSeeInOrder(
+                array_map(fn ($val) => "class=\"price\">" . $val, [1000, 900, 850]),
+                false
+            );
+
+        $this->get('/?sortPrice=asc')
+            ->assertSeeInOrder(
+                array_map(fn ($val) => "class=\"price\">" . $val, [222, 250, 300]),
+                false
+            );
+    }
+
+    public function test_products_are_listed_without_sorting_by_price_when_price_sort_value_is_invalid()
+    {
+        $priceOrder = [900, 850, 800, 750, 400, 322, 300, 250, 222, 1000];
+
+        Product::factory(10)
+            ->sequence(fn ($sequence) => ['price_with_tax' => $priceOrder[$sequence->index]])
+            ->create();
+
+        $this->get('/?sortPrice=invalidvalue')
+            ->assertStatus(200)
+            ->assertSeeInOrder(
+                array_map(fn ($val) => "class=\"price\">" . $val, [900, 850, 800]),
+                false
+            );
     }
 }

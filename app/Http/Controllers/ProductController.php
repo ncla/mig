@@ -11,8 +11,11 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
+        $priceSortingQuery = $request->get('sortPrice');
+        $priceSorting = in_array($priceSortingQuery, ['asc', 'desc']) ? $priceSortingQuery : null;
+
         return view('products', [
-            'products' => $this->productRepository->get(priceSort: 'desc')
+            'products' => $this->productRepository->get(priceSort: $priceSorting)
         ]);
     }
 
