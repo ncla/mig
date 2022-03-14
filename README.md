@@ -19,7 +19,7 @@ You will need Docker and Docker Composer to be installed to use Laravel Sail.
 5. `./vendor/bin/sail php artisan key:generate` to generate APP_KEY in .env
 6. `./vendor/bin/sail php artisan migrate` to run database migrations
 
-At this point you should be able to access the site without errors. To access the site use http://localhost, but you can also add `127.0.0.1 mig.test` in `/etc/hosts/` file and then access site through http://mig.test
+At this point you should be able to access the site without errors. To access the site use http://localhost, but you can also add `127.0.0.1 mig.test` in `/etc/hosts/` file and then access site through http://mig.test. You can sort the table by price with `sortPrice` query http://localhost/?sortPrice=asc (`asc` or `desc` value).
 
 To run the tests: `./vendor/bin/sail phpunit`
 
